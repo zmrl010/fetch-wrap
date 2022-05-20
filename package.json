@@ -15,7 +15,11 @@
     "ci": "yarn build && yarn test && yarn lint && yarn check"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.25.0",
+    "@typescript-eslint/parser": "^5.25.0",
+    "@zmrl/eslint-config": "^1.0.20",
     "eslint": "^8.15.0",
+    "eslint-plugin-import": "^2.26.0",
     "parcel": "^2.5.0",
     "prettier": "^2.6.2",
     "typescript": "^4.6.4"
