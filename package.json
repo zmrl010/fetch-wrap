@@ -1,0 +1,24 @@
+{
+  "name": "fetchit",
+  "version": "0.1.0",
+  "description": "Tiny wrapper around fetch for error handling and convenience.",
+  "source": "src/index.ts",
+  "main": "dist/main.js",
+  "module": "dist/module.js",
+  "types": "dist/types.d.ts",
+  "scripts": {
+    "watch": "parcel watch",
+    "build": "parcel build",
+    "test": "jest",
+    "lint": "eslint",
+    "check": "tsc --noEmit",
+    "ci": "yarn build && yarn test && yarn lint && yarn check"
+  },
+  "devDependencies": {
+    "eslint": "^8.15.0",
+    "parcel": "^2.5.0",
+    "prettier": "^2.6.2",
+    "typescript": "^4.6.4"
+  },
+  "packageManager": "yarn@3.2.1"
+}
