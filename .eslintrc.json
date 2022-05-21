@@ -1,3 +1,11 @@
 {
-  "extends": "@zmrl"
+  "extends": "@zmrl",
+  "overrides": [
+    {
+      "files": "**/*.ts",
+      "parserOptions": {
+        "project": "./tsconfig.json"
+      }
+    }
+  ]
 }
