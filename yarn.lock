@@ -663,6 +663,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@parcel/packager-ts@npm:2.5.0":
+  version: 2.5.0
+  resolution: "@parcel/packager-ts@npm:2.5.0"
+  dependencies:
+    "@parcel/plugin": 2.5.0
+  checksum: 5285f10f54461f1704e0cc4648914f5772f8a40b9dc25a34f2e0a23e16217113c51d5d58211fbfcd9d4f0bce62ad506ab704f3052b623cd59bfa898986b98448
+  languageName: node
+  linkType: hard
+
 "@parcel/plugin@npm:2.5.0":
   version: 2.5.0
   resolution: "@parcel/plugin@npm:2.5.0"
@@ -915,6 +924,32 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@parcel/transformer-typescript-types@npm:2.5.0":
+  version: 2.5.0
+  resolution: "@parcel/transformer-typescript-types@npm:2.5.0"
+  dependencies:
+    "@parcel/diagnostic": 2.5.0
+    "@parcel/plugin": 2.5.0
+    "@parcel/source-map": ^2.0.0
+    "@parcel/ts-utils": 2.5.0
+    nullthrows: ^1.1.1
+  peerDependencies:
+    typescript: ">=3.0.0"
+  checksum: 1b3c0bc229750ed421959932f99567f4fae9d20740b0f2b662163562884688151508daa1cfe4caf3a47224959ebbcdc8b02c8a55456d7cfaa2770e3935928744
+  languageName: node
+  linkType: hard
+
+"@parcel/ts-utils@npm:2.5.0":
+  version: 2.5.0
+  resolution: "@parcel/ts-utils@npm:2.5.0"
+  dependencies:
+    nullthrows: ^1.1.1
+  peerDependencies:
+    typescript: ">=3.0.0"
+  checksum: 68e99b7decd0bc8bf72b9312ac28044bc944d066d098647022781ecad35da618ebd141c45dbf5503485a3603a85698b709ec6a525ebb6dd33c1718f410a4c51f
+  languageName: node
+  linkType: hard
+
 "@parcel/types@npm:2.5.0":
   version: 2.5.0
   resolution: "@parcel/types@npm:2.5.0"
@@ -969,6 +1004,13 @@ __metadata:
   peerDependencies:
     "@parcel/core": ^2.5.0
   checksum: 82a1cf1c56e6ba0475721887fe2548edeb4adf2ee6f1b3ed0bc6d70fb37ffd5b55107b064170d00e771c576058ff89786cd2b2d26753cb96eff12151d96df18a
+  languageName: node
+  linkType: hard
+
+"@rushstack/eslint-patch@npm:^1.1.3":
+  version: 1.1.3
+  resolution: "@rushstack/eslint-patch@npm:1.1.3"
+  checksum: 53752d1e34e45a91b30a016b837c33054fcbd0a295c0312b0812dab78289ea680d7c0c3f19c1f885f49764d416727747133765ff5bfce31a9c4cc93c7a56ebe1
   languageName: node
   linkType: hard
 
@@ -1163,10 +1205,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@zmrl/eslint-config@npm:^1.0.20":
-  version: 1.0.20
-  resolution: "@zmrl/eslint-config@npm:1.0.20"
+"@zmrl/eslint-config@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "@zmrl/eslint-config@npm:1.1.1"
   dependencies:
+    "@rushstack/eslint-patch": ^1.1.3
     "@typescript-eslint/eslint-plugin": ^5.20.0
     "@typescript-eslint/parser": ^5.20.0
     eslint-config-prettier: ^8.5.0
@@ -1186,7 +1229,7 @@ __metadata:
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: b5d5ef9cd04ddae8c71f7712435df9e7b60e65dc133781d2927df0464abac4163e7c697b20c6e481e4f24c4fbc25c321c00c743f00cfc401710cccc8aec4f6b9
+  checksum: d482f86fd177d9fc9de8261f51a9a1d4a8696878aea592f1a622ee129b38ecacb2ebe685feb67e4ee95b514bc6ba4c36df0c3eecade2d197748296821d48790b
   languageName: node
   linkType: hard
 
@@ -2368,10 +2411,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "fetchit@workspace:."
   dependencies:
+    "@parcel/packager-ts": 2.5.0
+    "@parcel/transformer-typescript-types": 2.5.0
     "@typescript-eslint/eslint-plugin": ^5.25.0
     "@typescript-eslint/parser": ^5.25.0
-    "@zmrl/eslint-config": ^1.0.20
+    "@zmrl/eslint-config": ^1.1.1
     eslint: ^8.15.0
+    eslint-import-resolver-typescript: ^2.7.1
     eslint-plugin-import: ^2.26.0
     parcel: ^2.5.0
     prettier: ^2.6.2

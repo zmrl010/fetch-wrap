@@ -1,9 +1,17 @@
-interface ClientOptions {
+import { RequestError } from "./error";
+
+export type RequestMethod =
+  | "GET"
+  | "PUT"
+  | "POST"
+  | "DELETE"
+  | "OPTIONS"
+  | "PATCH";
+
+export interface ClientOptions {
   fetch: typeof globalThis.fetch;
   defaultInit: RequestInit;
 }
-
-type RequestMethod = "GET" | "PUT" | "POST" | "DELETE";
 
 export function createClient({
   fetch = globalThis.fetch,
@@ -12,13 +20,13 @@ export function createClient({
   const createRequestMethod =
     (method: RequestMethod) =>
     async (input: RequestInfo, init: Omit<RequestInit, "method">) => {
-      const result = await fetch(input, { ...defaultInit, ...init, method });
+      const response = await fetch(input, { ...defaultInit, ...init, method });
 
-      if (!result.ok) {
-        throw new Error("Network error occurred");
+      if (!response.ok) {
+        throw new RequestError(response);
       }
 
-      return result.json();
+      return response.json();
     };
 
   return {
@@ -26,5 +34,7 @@ export function createClient({
     put: createRequestMethod("PUT"),
     post: createRequestMethod("POST"),
     delete: createRequestMethod("DELETE"),
+    options: createRequestMethod("OPTIONS"),
+    patch: createRequestMethod("PATCH"),
   };
 }
