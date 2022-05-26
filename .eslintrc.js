@@ -3,13 +3,10 @@ require("@zmrl/eslint-config/patch/modern-module-resolution");
 /** @type {import('eslint').Linter.Config} */
 module.exports = {
   extends: "@zmrl",
-  overrides: [
-    {
-      files: "**/*.ts",
-      parserOptions: {
-        project: "./tsconfig.json",
-        tsconfigRootDir: __dirname,
-      },
-    },
-  ],
+  parserOptions: {
+    tsconfigRootDir: __dirname,
+    ecmaVersion: 2018,
+    sourceType: "module",
+    project: "./tsconfig.json",
+  },
 };

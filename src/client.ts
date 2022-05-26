@@ -1,40 +1,74 @@
 import { RequestError } from "./error";
-
-export type RequestMethod =
-  | "GET"
-  | "PUT"
-  | "POST"
-  | "DELETE"
-  | "OPTIONS"
-  | "PATCH";
+import { isRequestMethod, type RequestMethod } from "./request-method";
 
 export interface ClientOptions {
   fetch: typeof globalThis.fetch;
-  defaultInit: RequestInit;
+  init?: RequestInit;
+}
+
+export type FetchRequest = ReturnType<typeof createRequest>;
+
+export type MethodActions = {
+  [K in RequestMethod]: FetchRequest;
+};
+
+export type RequestClient = ReturnType<typeof createClient>;
+
+/**
+ * Create the core request function.
+ *
+ * Used as the basis for other,
+ * more specific request methods
+ */
+function createRequest({
+  fetch: defaultFetch,
+  init: defaultInit,
+}: ClientOptions) {
+  return async <R>(
+    input: RequestInfo,
+    options: Partial<ClientOptions> = {}
+  ) => {
+    const { fetch = defaultFetch, init } = options;
+    const response = await fetch(input, { ...defaultInit, ...init });
+
+    if (!response.ok) {
+      throw new RequestError(response);
+    }
+
+    try {
+      return (await response.json()) as R;
+    } catch (err: unknown) {
+      return undefined;
+    }
+  };
+}
+
+function createRequestMethod(request: FetchRequest, method: RequestMethod) {
+  return <R>(input: RequestInfo, options: Partial<ClientOptions> = {}) =>
+    request<R>(input, { ...options, init: { ...options.init, method } });
 }
 
 export function createClient({
   fetch = globalThis.fetch,
-  defaultInit = {},
+  init = {},
 }: ClientOptions) {
-  const createRequestMethod =
-    (method: RequestMethod) =>
-    async (input: RequestInfo, init: Omit<RequestInit, "method">) => {
-      const response = await fetch(input, { ...defaultInit, ...init, method });
+  const request = createRequest({ fetch, init });
 
-      if (!response.ok) {
-        throw new RequestError(response);
+  const cache = new Map<RequestMethod, FetchRequest>();
+
+  return new Proxy(request, {
+    apply(_target, _thisArg, args: Parameters<FetchRequest>) {
+      return request(...args);
+    },
+    get(_target, prop) {
+      if (!isRequestMethod(prop)) {
+        return;
       }
 
-      return response.json();
-    };
-
-  return {
-    get: createRequestMethod("GET"),
-    put: createRequestMethod("PUT"),
-    post: createRequestMethod("POST"),
-    delete: createRequestMethod("DELETE"),
-    options: createRequestMethod("OPTIONS"),
-    patch: createRequestMethod("PATCH"),
-  };
+      if (!cache.has(prop)) {
+        cache.set(prop, createRequestMethod(request, prop));
+      }
+      return cache.get(prop);
+    },
+  }) as FetchRequest & MethodActions;
 }
