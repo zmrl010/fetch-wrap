@@ -1,6 +1,6 @@
 export {
   createClient,
-  type ClientOptions,
+  type RequestOptions as ClientOptions,
   type FetchRequest,
   type MethodActions,
   type RequestClient,

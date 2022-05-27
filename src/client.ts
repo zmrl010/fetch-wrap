@@ -1,8 +1,15 @@
 import { RequestError } from "./error";
 import { isRequestMethod, type RequestMethod } from "./request-method";
 
-export interface ClientOptions {
+export interface RequestOptions {
+  /**
+   * fetch implementation to make requests with
+   * @default globalThis.fetch
+   */
   fetch: typeof globalThis.fetch;
+  /**
+   * init options to be passed to each request
+   */
   init?: RequestInit;
 }
 
@@ -12,7 +19,7 @@ export type MethodActions = {
   [K in RequestMethod]: FetchRequest;
 };
 
-export type RequestClient = ReturnType<typeof createClient>;
+export type RequestClient = FetchRequest & MethodActions;
 
 /**
  * Create the core request function.
@@ -23,35 +30,29 @@ export type RequestClient = ReturnType<typeof createClient>;
 function createRequest({
   fetch: defaultFetch,
   init: defaultInit,
-}: ClientOptions) {
-  return async <R>(
-    input: RequestInfo,
-    options: Partial<ClientOptions> = {}
-  ) => {
+}: RequestOptions) {
+  return async (input: RequestInfo, options: Partial<RequestOptions> = {}) => {
     const { fetch = defaultFetch, init } = options;
+
     const response = await fetch(input, { ...defaultInit, ...init });
 
     if (!response.ok) {
       throw new RequestError(response);
     }
 
-    try {
-      return (await response.json()) as R;
-    } catch (err: unknown) {
-      return undefined;
-    }
+    return response;
   };
 }
 
 function createRequestMethod(request: FetchRequest, method: RequestMethod) {
-  return <R>(input: RequestInfo, options: Partial<ClientOptions> = {}) =>
-    request<R>(input, { ...options, init: { ...options.init, method } });
+  return (input: RequestInfo, options: Partial<RequestOptions> = {}) =>
+    request(input, { ...options, init: { ...options.init, method } });
 }
 
 export function createClient({
   fetch = globalThis.fetch,
   init = {},
-}: ClientOptions) {
+}: RequestOptions): RequestClient {
   const request = createRequest({ fetch, init });
 
   const cache = new Map<RequestMethod, FetchRequest>();
@@ -60,15 +61,16 @@ export function createClient({
     apply(_target, _thisArg, args: Parameters<FetchRequest>) {
       return request(...args);
     },
-    get(_target, prop) {
-      if (!isRequestMethod(prop)) {
+
+    get(_target, method) {
+      if (!isRequestMethod(method)) {
         return;
       }
 
-      if (!cache.has(prop)) {
-        cache.set(prop, createRequestMethod(request, prop));
+      if (!cache.has(method)) {
+        cache.set(method, createRequestMethod(request, method));
       }
-      return cache.get(prop);
+      return cache.get(method);
     },
-  }) as FetchRequest & MethodActions;
+  }) as RequestClient;
 }
