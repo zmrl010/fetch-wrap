@@ -1,10 +1,11 @@
 export const REQUEST_METHODS = [
-  "get",
-  "put",
-  "post",
   "delete",
+  "get",
+  "head",
   "options",
   "patch",
+  "post",
+  "put",
 ] as const;
 
 export type RequestMethod = typeof REQUEST_METHODS[number];

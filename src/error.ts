@@ -1,3 +1,6 @@
+/**
+ * Error thrown when a network error occurs during a request.
+ */
 export class RequestError extends Error {
   readonly response: Response;
 

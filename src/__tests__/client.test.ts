@@ -1,4 +1,4 @@
-import { RequestClient, createClient } from "../client";
+import { type RequestClient, createClient } from "../client";
 import { RequestError } from "../error";
 import { REQUEST_METHODS } from "../request-method";
 
