@@ -1,5 +1,5 @@
 {
-  "name": "fetchit",
+  "name": "@zmrl/fetch-wrap",
   "version": "0.1.0",
   "description": "Tiny wrapper around fetch for error handling and convenience.",
   "source": "src/index.ts",
