@@ -6,13 +6,17 @@
   "main": "dist/main.js",
   "module": "dist/module.js",
   "types": "dist/types.d.ts",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "watch": "parcel watch",
     "build": "parcel build",
     "test": "jest",
     "lint": "eslint",
     "check": "tsc --noEmit",
-    "ci": "yarn build && yarn test && yarn lint && yarn check"
+    "ci": "yarn build && yarn test && yarn lint && yarn check",
+    "prepare": "yarn ci"
   },
   "devDependencies": {
     "@parcel/packager-ts": "2.5.0",

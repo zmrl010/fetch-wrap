@@ -9,4 +9,5 @@ module.exports = {
     sourceType: "module",
     project: "./tsconfig.json",
   },
+  ignorePatterns: ["dist"],
 };
