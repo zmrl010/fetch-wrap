@@ -2,11 +2,13 @@
  * Error thrown when a network error occurs during a request.
  */
 export class RequestError extends Error {
-  readonly response: Response;
+  readonly request?: Request;
+  readonly response?: Response;
 
-  constructor(response: Response) {
-    super(response.statusText);
+  constructor(message?: string, request?: Request, response?: Response) {
+    super(message);
 
+    this.request = request;
     this.response = response;
   }
 }

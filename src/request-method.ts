@@ -1,18 +1,7 @@
-export const REQUEST_METHODS = [
-  "delete",
-  "get",
-  "head",
-  "options",
-  "patch",
-  "post",
-  "put",
-] as const;
+export const DATA_REQUEST_METHODS = ["patch", "post", "put"] as const;
 
-export type RequestMethod = typeof REQUEST_METHODS[number];
+export const REQUEST_METHODS = ["delete", "get", "head", "options"] as const;
 
-export function isRequestMethod(val: unknown): val is RequestMethod {
-  if (typeof val !== "string") {
-    return false;
-  }
-  return REQUEST_METHODS.includes(val as RequestMethod);
-}
+export type RequestMethod = typeof REQUEST_METHODS[number] | DataRequestMethod;
+
+export type DataRequestMethod = typeof DATA_REQUEST_METHODS[number];

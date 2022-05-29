@@ -3,7 +3,7 @@ import { type RequestMethod } from "./request-method";
 
 export type DispatchRequest = (
   input: RequestInfo,
-  options?: Partial<RequestOptions>
+  options?: RequestOptions
 ) => Promise<Response>;
 
 export interface RequestOptions extends RequestInit {
@@ -28,13 +28,18 @@ export function createRequest({
   fetch: defaultFetch,
   ...defaultInit
 }: RequestOptions): DispatchRequest {
-  return async (input: RequestInfo, options: Partial<RequestOptions> = {}) => {
-    const { fetch = defaultFetch, ...init } = options;
+  return async (
+    input: RequestInfo,
+    options: RequestOptions = { fetch: defaultFetch }
+  ) => {
+    const { fetch, ...init } = options;
 
-    const response = await fetch(input, { ...defaultInit, ...init });
+    const request = new Request(input, { ...defaultInit, ...init });
+
+    const response = await fetch(request);
 
     if (!response.ok) {
-      throw new RequestError(response);
+      throw new RequestError(response.statusText, request, response);
     }
 
     return response;
