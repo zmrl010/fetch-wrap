@@ -34,12 +34,10 @@ export function createRequest({
   ) => {
     const { fetch, ...init } = options;
 
-    const request = new Request(input, { ...defaultInit, ...init });
-
-    const response = await fetch(request);
+    const response = await fetch(input, { ...defaultInit, ...init });
 
     if (!response.ok) {
-      throw new RequestError(response.statusText, request, response);
+      throw new RequestError(response.statusText, response);
     }
 
     return response;
