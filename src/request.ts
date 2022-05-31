@@ -1,8 +1,14 @@
 import { RequestError } from "./error";
 import { type RequestMethod } from "./request-method";
 
-export type DispatchRequest = (
+export type RequestDispatch = (
   input: RequestInfo,
+  options?: Partial<RequestOptions>
+) => Promise<Response>;
+
+export type DataRequestDispatch = (
+  input: RequestInfo,
+  data?: unknown,
   options?: RequestOptions
 ) => Promise<Response>;
 
@@ -24,16 +30,12 @@ export interface RequestOptions extends RequestInit {
  * Used as the basis for other,
  * more specific request methods
  */
-export function createRequest({
+export function createRequestDispatch({
   fetch: defaultFetch,
   ...defaultInit
-}: RequestOptions): DispatchRequest {
-  return async (
-    input: RequestInfo,
-    options: RequestOptions = { fetch: defaultFetch }
-  ) => {
-    const { fetch, ...init } = options;
-
+}: RequestOptions): RequestDispatch {
+  return async (input: RequestInfo, options: Partial<RequestOptions> = {}) => {
+    const { fetch = defaultFetch, ...init } = options;
     const response = await fetch(input, { ...defaultInit, ...init });
 
     if (!response.ok) {
@@ -42,4 +44,13 @@ export function createRequest({
 
     return response;
   };
+}
+
+export function createDataRequestDispatch(
+  defaultOptions: RequestOptions
+): DataRequestDispatch {
+  const dispatchRequest = createRequestDispatch(defaultOptions);
+
+  return async (input, data, options) =>
+    dispatchRequest(input, { ...options, body: JSON.stringify(data) });
 }

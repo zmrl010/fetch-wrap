@@ -20,7 +20,7 @@ describe("client created by createClient()", () => {
   });
 
   it.each(REQUEST_METHODS)(
-    "should call shortcut .%s()",
+    "should call fetch with method: .%s()",
     async (method) => {
       expect(typeof request[method]).toBe("function");
       await request[method]("test.com");
