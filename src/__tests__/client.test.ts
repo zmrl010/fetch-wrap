@@ -1,6 +1,6 @@
 import { type RequestClient, createClient } from "../client";
 import { RequestError } from "../error";
-import { REQUEST_METHODS } from "../request-method";
+import { METHODS } from "../request";
 
 describe("client created by createClient()", () => {
   const mockFetch = jest.fn(
@@ -19,14 +19,11 @@ describe("client created by createClient()", () => {
     expect(mockFetch).toHaveBeenCalledWith("test.com", {});
   });
 
-  it.each(REQUEST_METHODS)(
-    "should call fetch with method: .%s()",
-    async (method) => {
-      expect(typeof request[method]).toBe("function");
-      await request[method]("test.com");
-      expect(mockFetch).toHaveBeenCalledWith("test.com", { method });
-    }
-  );
+  it.each(METHODS)("should call fetch with method: .%s()", async (method) => {
+    expect(typeof request[method]).toBe("function");
+    await request[method]("test.com");
+    expect(mockFetch).toHaveBeenCalledWith("test.com", { method });
+  });
 
   it("should throw when response was not successful", async () => {
     mockFetch.mockImplementationOnce(

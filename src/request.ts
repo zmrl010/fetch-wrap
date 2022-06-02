@@ -1,28 +1,30 @@
+import { mergeConfig, type Config } from "./config";
 import { RequestError } from "./error";
-import { type RequestMethod } from "./request-method";
 
 export type RequestDispatch = (
   input: RequestInfo,
-  options?: Partial<RequestOptions>
+  config?: Partial<Config>
 ) => Promise<Response>;
 
 export type DataRequestDispatch = (
   input: RequestInfo,
   data?: unknown,
-  options?: RequestOptions
+  config?: Config
 ) => Promise<Response>;
 
-export interface RequestOptions extends RequestInit {
-  /**
-   * Fetch implementation for making requests
-   * @default globalThis.fetch
-   */
-  fetch: typeof globalThis.fetch;
-  /**
-   * Lowercase request method
-   */
-  method?: RequestMethod;
-}
+export const METHODS = [
+  "delete",
+  "get",
+  "head",
+  "options",
+  "patch",
+  "post",
+  "put",
+] as const;
+
+export const DATA_REQUEST_METHODS = ["patch", "post", "put"] as const;
+
+export type Method = typeof METHODS[number];
 
 /**
  * Create the core request function.
@@ -30,13 +32,11 @@ export interface RequestOptions extends RequestInit {
  * Used as the basis for other,
  * more specific request methods
  */
-export function createRequestDispatch({
-  fetch: defaultFetch,
-  ...defaultInit
-}: RequestOptions): RequestDispatch {
-  return async (input: RequestInfo, options: Partial<RequestOptions> = {}) => {
-    const { fetch = defaultFetch, ...init } = options;
-    const response = await fetch(input, { ...defaultInit, ...init });
+export function createRequestDispatch(defaultConfig: Config): RequestDispatch {
+  return async (input: RequestInfo, config: Partial<Config> = {}) => {
+    const { fetch, ...finalConfig } = mergeConfig(defaultConfig, config);
+
+    const response = await fetch(input, finalConfig);
 
     if (!response.ok) {
       throw new RequestError(response.statusText, response);
@@ -47,10 +47,10 @@ export function createRequestDispatch({
 }
 
 export function createDataRequestDispatch(
-  defaultOptions: RequestOptions
+  defaultOptions: Config
 ): DataRequestDispatch {
   const dispatchRequest = createRequestDispatch(defaultOptions);
 
-  return async (input, data, options) =>
+  return (input, data, options) =>
     dispatchRequest(input, { ...options, body: JSON.stringify(data) });
 }

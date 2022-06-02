@@ -1,21 +1,21 @@
+import { mergeConfig, type Config } from "./config";
 import {
   createRequestDispatch,
   type RequestDispatch,
-  type RequestOptions,
+  type Method,
 } from "./request";
-import { type RequestMethod } from "./request-method";
 
 export type MethodActions = {
-  [K in RequestMethod]: RequestDispatch;
+  [K in Method]: RequestDispatch;
 };
 
 export type RequestClient = RequestDispatch & MethodActions;
 
-export function createClient({
-  fetch = globalThis.fetch,
-  ...init
-}: RequestOptions): RequestClient {
-  const request = createRequestDispatch({ fetch, ...init });
+export function createClient(config: Config): RequestClient {
+  const combinedConfig = mergeConfig({ fetch: globalThis.fetch }, config);
+  const request = createRequestDispatch(combinedConfig);
+
+  const { fetch } = combinedConfig;
 
   return Object.assign(request, {
     get: createRequestDispatch({ fetch, method: "get" }),
