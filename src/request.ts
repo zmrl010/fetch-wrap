@@ -1,4 +1,5 @@
-import { mergeConfig, type Config } from "./config";
+import { type Config } from "./config";
+import { merge } from "./merge";
 import { RequestError } from "./error";
 
 export type RequestDispatch = (
@@ -34,7 +35,7 @@ export type Method = typeof METHODS[number];
  */
 export function createRequestDispatch(defaultConfig: Config): RequestDispatch {
   return async (input: RequestInfo, config: Partial<Config> = {}) => {
-    const { fetch, ...finalConfig } = mergeConfig(defaultConfig, config);
+    const { fetch, ...finalConfig } = merge(defaultConfig, config);
 
     const response = await fetch(input, finalConfig);
 

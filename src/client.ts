@@ -1,4 +1,5 @@
-import { mergeConfig, type Config } from "./config";
+import { type Config } from "./config";
+import { merge } from "./merge";
 import {
   createRequestDispatch,
   type RequestDispatch,
@@ -11,13 +12,13 @@ export type MethodActions = {
 
 export type RequestClient = RequestDispatch & MethodActions;
 
-export function createClient(config: Config): RequestClient {
-  const combinedConfig = mergeConfig({ fetch: globalThis.fetch }, config);
-  const request = createRequestDispatch(combinedConfig);
+export function createClient(baseConfig: Config): RequestClient {
+  const config = merge({ fetch: globalThis.fetch }, baseConfig);
+  const request = createRequestDispatch(config);
 
-  const { fetch } = combinedConfig;
+  const { fetch } = config;
 
-  return Object.assign(request, {
+  return Object.assign<RequestDispatch, MethodActions>(request, {
     get: createRequestDispatch({ fetch, method: "get" }),
     head: createRequestDispatch({ fetch, method: "head" }),
     options: createRequestDispatch({ fetch, method: "options" }),
