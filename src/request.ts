@@ -1,5 +1,4 @@
 import { type Config } from "./config";
-import { merge } from "./merge";
 import { RequestError } from "./error";
 
 export type RequestDispatch = (
@@ -33,11 +32,14 @@ export type Method = typeof METHODS[number];
  * Used as the basis for other,
  * more specific request methods
  */
-export function createRequestDispatch(defaultConfig: Config): RequestDispatch {
-  return async (input: RequestInfo, config: Partial<Config> = {}) => {
-    const { fetch, ...finalConfig } = merge(defaultConfig, config);
+export function createRequestDispatch(baseConfig: Config): RequestDispatch {
+  return async (input: RequestInfo, requestConfig: Partial<Config> = {}) => {
+    const { fetch, ...config } = {
+      ...baseConfig,
+      ...requestConfig,
+    };
 
-    const response = await fetch(input, finalConfig);
+    const response = await fetch(input, config);
 
     if (!response.ok) {
       throw new RequestError(response.statusText, response);
@@ -48,10 +50,10 @@ export function createRequestDispatch(defaultConfig: Config): RequestDispatch {
 }
 
 export function createDataRequestDispatch(
-  defaultOptions: Config
+  baseConfig: Config
 ): DataRequestDispatch {
-  const dispatchRequest = createRequestDispatch(defaultOptions);
+  const dispatchRequest = createRequestDispatch(baseConfig);
 
-  return (input, data, options) =>
-    dispatchRequest(input, { ...options, body: JSON.stringify(data) });
+  return (input, data, config) =>
+    dispatchRequest(input, { ...config, body: JSON.stringify(data) });
 }

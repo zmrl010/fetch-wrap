@@ -1,5 +1,4 @@
 import { type Config } from "./config";
-import { merge } from "./merge";
 import {
   createRequestDispatch,
   type RequestDispatch,
@@ -12,8 +11,13 @@ export type MethodActions = {
 
 export type RequestClient = RequestDispatch & MethodActions;
 
+const defaultConfig: Config = {
+  fetch: globalThis.fetch,
+};
+
 export function createClient(baseConfig: Config): RequestClient {
-  const config = merge({ fetch: globalThis.fetch }, baseConfig);
+  const config = { ...defaultConfig, ...baseConfig };
+
   const request = createRequestDispatch(config);
 
   const { fetch } = config;
