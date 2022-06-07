@@ -7,4 +7,5 @@ export interface Config extends RequestInit {
    */
   fetch: typeof globalThis.fetch;
   method?: Method | Uppercase<Method>;
+  data?: unknown;
 }
