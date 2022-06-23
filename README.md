@@ -1,5 +1,5 @@
 <h1 align="center">
-  🌯 fetch-wrap 🌯
+  🌯 fetchy 🌯
 </h1>
 <p align="center">
   Tiny wrapper around fetch for error handling and convenience.
@@ -9,10 +9,10 @@
 
 ```shell
 # npm
-npm i @zmrl/fetch-wrap
+npm i @zmrl/fetchy
 
 # or yarn
-yarn add @zmrl/fetch-wrap
+yarn add @zmrl/fetchy
 ```
 
 ## Get Started
@@ -23,7 +23,7 @@ for functionality. If `globalThis.fetch` is available in your environment,
 then that will be used automatically.
 
 ```ts
-import { createClient } from "@zmrl/fetch-wrap";
+import { createClient } from "@zmrl/fetchy";
 
 const request = createClient();
 ```
@@ -31,7 +31,7 @@ const request = createClient();
 Otherwise, pass a compatible `fetch` implementation.
 
 ```ts
-import { createClient } from "@zmrl/fetch-wrap";
+import { createClient } from "@zmrl/fetchy";
 import fetch from "node-fetch";
 
 const request = createClient({ fetch });

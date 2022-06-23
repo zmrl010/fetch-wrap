@@ -1,4 +1,5 @@
-export { createClient, type RequestClient } from "./client";
-export { RequestError } from "./error";
-export { type RequestDispatch, type Method } from "./request";
-export { type Config } from "./config";
+import { createFetchy } from "./factory";
+
+const fetchy = createFetchy();
+
+export default fetchy;
