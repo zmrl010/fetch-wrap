@@ -1,5 +1,5 @@
 <h1 align="center">
-  🌯 fetchy 🌯
+  🦆 fetchy 🦆
 </h1>
 <p align="center">
   Tiny wrapper around fetch for error handling and convenience.
@@ -23,24 +23,11 @@ for functionality. If `globalThis.fetch` is available in your environment,
 then that will be used automatically.
 
 ```ts
-import { createClient } from "@zmrl/fetchy";
+import fetchy from "@zmrl/fetchy";
 
-const request = createClient();
-```
-
-Otherwise, pass a compatible `fetch` implementation.
-
-```ts
-import { createClient } from "@zmrl/fetchy";
-import fetch from "node-fetch";
-
-const request = createClient({ fetch });
-```
-
-```ts
-request("https://example.com");
-request.get("https://example.com");
-request.post("https://example.com", data);
+fetchy.request("https://example.com");
+fetchy.get("https://example.com");
+fetchy.post("https://example.com", data);
 ```
 
 ---
