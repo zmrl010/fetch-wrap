@@ -1,5 +1,19 @@
 import { RequestError } from "./error";
-import type { Config, DataMethod, Method } from "./types";
+
+export type DataMethod = "patch" | "post" | "put";
+export type Method = "delete" | "get" | "head" | "options" | DataMethod;
+
+export type UpperOrLowerMethod = Uppercase<Method> | Method;
+
+export interface Config<D = unknown> {
+  method?: UpperOrLowerMethod;
+  data?: D;
+  init?: RequestInit;
+  input: RequestInfo;
+  responseType?: ResponseType;
+}
+
+export type ResponseType = "arraybuffer" | "blob" | "json" | "text" | "stream";
 
 type FetchParams = Parameters<typeof globalThis.fetch>;
 
@@ -32,7 +46,7 @@ export function createFetchy(fetch = globalThis.fetch) {
     const response = await fetch(...params);
 
     if (!response.ok) {
-      throw new RequestError(response.statusText, response);
+      throw new RequestError(response.statusText, config, response);
     }
 
     return response;
@@ -45,7 +59,7 @@ export function createFetchy(fetch = globalThis.fetch) {
 
   function createDataMethod(method: DataMethod) {
     return <D = unknown>(input: RequestInfo, data?: D, config?: Config<D>) =>
-      request({ ...config, method, input, data });
+      request({ ...config, input, method, data });
   }
 
   return {

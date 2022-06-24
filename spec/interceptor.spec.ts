@@ -8,8 +8,18 @@ describe("InterceptorManager", () => {
       fulfilled: () => {},
     });
 
-    const result = manager.delete(key);
+    expect(manager.delete(key)).toBe(true);
+  });
 
-    expect(result).toBe(true);
+  it("can iterate through each added handler with forEach()", () => {
+    const args = [{}, {}, {}];
+
+    const manager = new InterceptorManager();
+
+    args.forEach((arg) => manager.use(arg));
+
+    manager.forEach((handler) => {
+      expect(args.includes(handler)).toBe(true);
+    });
   });
 });
